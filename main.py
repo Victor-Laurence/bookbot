@@ -1,11 +1,8 @@
+from stats import get_num_words
+
 def get_book_text(path):
     with open(path) as f:
         return f.read()
-
-
-def get_word_count(text):
-    words = text.split()
-    return len(words)
 
 
 def get_dict_of_chars(text):
