@@ -1,4 +1,5 @@
-from stats import get_num_words
+from stats import get_word_count
+import sys
 
 def get_book_text(path):
     with open(path) as f:
@@ -30,7 +31,12 @@ def get_char_report(char_dict):
 
 
 def main():
-    path = "books/frankenstein.txt"
+    if len(sys.argv) < 2: 
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
+        return
+
+    path = sys.argv[1]
     text = get_book_text(path)
     word_count = get_word_count(text)
     char_dict = get_dict_of_chars(text)
