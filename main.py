@@ -1,34 +1,9 @@
-from stats import get_word_count
 import sys
-
-def get_book_text(path):
-    with open(path) as f:
-        return f.read()
-
-
-def get_dict_of_chars(text):
-    chars_dict = {}
-    words = text.lower().split()
-    for word in words:
-        for char in word:
-            if char in chars_dict:
-                chars_dict[char] += 1
-            else:
-                chars_dict[char] = 1
-    return chars_dict
-
-
-def sort_dict_on_value(dict, ascending=True):
-    return sorted(list(dict), key=dict.get, reverse=(not ascending))
-
-
-def get_char_report(char_dict):
-    report = []
-    for char in sort_dict_on_value(char_dict, False) :
-        if char.isalpha():
-            report.append(f"The '{char}' character was found {char_dict[char]} times")
-    return report
-
+from stats import (
+    get_num_words,
+    chars_dict_to_sorted_list,
+    get_chars_dict,
+)
 
 def main():
     if len(sys.argv) < 2: 
@@ -36,17 +11,30 @@ def main():
         sys.exit(1)
         return
 
-    path = sys.argv[1]
-    text = get_book_text(path)
-    word_count = get_word_count(text)
-    char_dict = get_dict_of_chars(text)
-    char_report = get_char_report(char_dict)
+    book_path = sys.argv[1]
+    text = get_book_text(book_path)
+    num_words = get_num_words(text)
+    chars_dict = get_chars_dict(text)
+    chars_sorted_list = chars_dict_to_sorted_list(chars_dict)
+    print_report(book_path, num_words, chars_sorted_list)
 
-    print(f"--- Begin report of {path}---")
-    print(f"{word_count} words found in the document")
-    print("")
-    for report_line in char_report:
-        print(report_line)
-    print("--- End report ---")
+
+def get_book_text(path):
+    with open(path) as f:
+        return f.read()
+
+
+def print_report(book_path, num_words, chars_sorted_list):
+    print("============ BOOKBOT ============")
+    print(f"Analyzing book found at {book_path}...")
+    print("----------- Word Count ----------")
+    print(f"Found {num_words} total words")
+    print("--------- Character Count -------")
+    for item in chars_sorted_list:
+        if not item["char"].isalpha():
+            continue
+        print(f"{item['char']}: {item['num']}")
+
+    print("============= END ===============")
 
 main()
